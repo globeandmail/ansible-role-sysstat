@@ -10,14 +10,14 @@
   copy:
     dest: '/etc/default/sysstat'
     content: 'ENABLED="true"'
-  when: ansible_role_sysstat_enabled is true
+  when: ansible_role_sysstat_enabled == true
   register: ansible_role_sysstat_do_enable
 
 - name: Disable sysstat
   copy:
     dest: '/etc/default/sysstat'
     content: 'ENABLED="false"'
-  when: ansible_role_sysstat_enabled is false
+  when: ansible_role_sysstat_enabled == false
   register: ansible_role_sysstat_do_disable
 
 - name: Install /etc/sysstat/sysstat (cfg file)

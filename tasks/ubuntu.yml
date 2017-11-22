@@ -1,0 +1,22 @@
+---
+- name: Install sysstat
+  apt:
+    name: "sysstat"
+    state: "present"
+    update_cache: 'yes'
+
+- name: Enable sysstat
+  lineinfile:
+    path: '/etc/default/sysstat'
+    regexp: '^ENABLED="false"'
+    line: 'ENABLED="true"'
+  when: ansible_role_sysstat_enabled is true
+
+- name: Install /etc/sysstat/sysstat (cfg file)
+    copy:
+      src: "{{ ansible_role_sysstat_cfg_file }}"
+      dest: "/etc/sysstat/sysstat"
+      mode: 0644
+      owner: "root"
+      group: "root"
+  when: ansible_role_sysstat_cfg_file is defined

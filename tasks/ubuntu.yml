@@ -21,12 +21,12 @@
   register: ansible_role_sysstat_do_disable
 
 - name: Install /etc/sysstat/sysstat (cfg file)
-    copy:
-      src: "{{ ansible_role_sysstat_cfg_file }}"
-      dest: "/etc/sysstat/sysstat"
-      mode: 0644
-      owner: "root"
-      group: "root"
+  copy:
+    src: "{{ ansible_role_sysstat_cfg_file }}"
+    dest: "/etc/sysstat/sysstat"
+    mode: 0644
+    owner: "root"
+    group: "root"
   when: ansible_role_sysstat_cfg_file is defined
   register: ansible_role_sysstat_cfg_installed
 

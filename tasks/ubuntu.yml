@@ -4,13 +4,21 @@
     name: "sysstat"
     state: "present"
     update_cache: 'yes'
+  register: ansible_role_sysstat_inst
 
 - name: Enable sysstat
-  lineinfile:
-    path: '/etc/default/sysstat'
-    regexp: '^ENABLED="false"'
-    line: 'ENABLED="true"'
+  copy:
+    dest: '/etc/default/sysstat'
+    content: 'ENABLED="true"'
   when: ansible_role_sysstat_enabled is true
+  register: ansible_role_sysstat_do_enable
+
+- name: Disable sysstat
+  copy:
+    dest: '/etc/default/sysstat'
+    content: 'ENABLED="false"'
+  when: ansible_role_sysstat_enabled is false
+  register: ansible_role_sysstat_do_disable
 
 - name: Install /etc/sysstat/sysstat (cfg file)
     copy:
@@ -20,3 +28,11 @@
       owner: "root"
       group: "root"
   when: ansible_role_sysstat_cfg_file is defined
+  register: ansible_role_sysstat_cfg_installed
+
+- name: (re)start sysstat
+  service:
+    name: 'sysstat'
+    state: 'restarted'
+    enabled: 'yes'
+  when: ansible_role_sysstat_inst.changed or ansible_role_sysstat_do_enable.changed or ansible_role_sysstat_do_disable.changed or ansible_role_sysstat_cfg_installed.changed
